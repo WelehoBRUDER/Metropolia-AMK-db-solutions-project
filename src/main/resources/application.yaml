@@ -2,12 +2,12 @@ spring:
   application:
     name: database_solutions_project
   datasource:
-    url: jdbc:mariadb://localhost:3306/tietokantaratkaisut
+    url: jdbc:mariadb://localhost:3306/tietokantaratkaisut?allowPublicKeyRetrieval=true
     username: project_dbuser
     password: userpassword
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
 server:
   port: 8081
