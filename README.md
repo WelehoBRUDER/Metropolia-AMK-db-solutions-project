@@ -2,6 +2,10 @@
 
 This project implements a REST API for a web store using Java Persistence API (JPA) and Spring Boot. The API provides endpoints for managing products, suppliers, categories, customers, and orders.
 
+⚠️ This repository is a continuation of the disorganized and scattered repository that was only created to store implementations of daily assignments.  
+The project has been refactored and moved here in a bulk commit, so the commit history is not preserved.  
+ It can be found here: [https://github.com/WelehoBRUDER/Metropolia-AMK-database-solutions](https://github.com/WelehoBRUDER/Metropolia-AMK-database-solutions)
+
 ## API Endpoints
 
 ### Product
