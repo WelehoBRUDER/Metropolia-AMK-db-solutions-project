@@ -16,8 +16,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     // Make JPA connection later
-    @Column(name="customer_id")
-    private int customerId;
     @Column(name="order_date")
     private LocalDate orderDate;
     @Column(name = "delivery_date")
@@ -28,6 +26,9 @@ public class Order {
     private OrderStatus status;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     public int getId() {
         return id;
@@ -35,14 +36,6 @@ public class Order {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
     }
 
     public LocalDate getOrderDate() {
@@ -83,6 +76,14 @@ public class Order {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public void addItem(OrderItem item) {

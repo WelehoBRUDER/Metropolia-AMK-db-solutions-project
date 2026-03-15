@@ -1,35 +1,14 @@
-package fi.metropolia.juhanaha.database_solutions_project.entity;
-
-import jakarta.persistence.*;
+package fi.metropolia.juhanaha.database_solutions_project.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "customers")
-public class Customer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CustomerSimpleDto {
     private int id;
-    @Column(name = "first_name")
     private String firstName;
-    @Column(name = "last_name")
     private String lastName;
     private String email;
     private String phone;
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<Order> orders = new ArrayList<>();
-
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, optional = true)
-    private CustomerProfile profile;
-
-    public CustomerProfile getProfile() {
-        return profile;
-    }
-
-    public void setProfile(CustomerProfile profile) {
-        this.profile = profile;
-    }
 
     public int getId() {
         return id;
@@ -69,13 +48,5 @@ public class Customer {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
     }
 }

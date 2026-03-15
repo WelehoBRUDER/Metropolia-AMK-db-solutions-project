@@ -10,7 +10,7 @@ public class OrderService {
 
         OrderDto dto = new OrderDto();
         dto.setId(order.getId());
-        dto.setCustomerId(order.getCustomerId());
+        dto.setCustomerId(order.getCustomer().getId());
         dto.setOrderDate(order.getOrderDate());
         dto.setDeliveryDate(order.getDeliveryDate());
         dto.setShippingAddressId(order.getShippingAddressId());

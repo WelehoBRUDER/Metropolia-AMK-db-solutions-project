@@ -23,18 +23,20 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/order")
 public class OrderController {
+    private final CustomerRepository customerRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
-    public OrderController(OrderRepository orderRepository, ProductRepository productRepository) {
+    public OrderController(OrderRepository orderRepository, ProductRepository productRepository, CustomerRepository customerRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
+        this.customerRepository = customerRepository;
     }
 
     public Order createOrderFromRequest(OrderRequestDto dto) {
         Order order = new Order();
 
-        order.setCustomerId(dto.getCustomerId());
+        order.setCustomer(customerRepository.findById(dto.getCustomerId()).orElseThrow());
         order.setShippingAddressId(dto.getShippingAddressId());
 
         order.setOrderDate(LocalDate.now());

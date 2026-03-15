@@ -2,6 +2,7 @@ package fi.metropolia.juhanaha.database_solutions_project.controller;
 
 import fi.metropolia.juhanaha.database_solutions_project.CustomerRepository;
 import fi.metropolia.juhanaha.database_solutions_project.dto.CustomerDto;
+import fi.metropolia.juhanaha.database_solutions_project.dto.CustomerSimpleDto;
 import fi.metropolia.juhanaha.database_solutions_project.entity.Customer;
 import fi.metropolia.juhanaha.database_solutions_project.service.CustomerService;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,10 @@ public class CustomerController {
     }
 
     @GetMapping("/")
-    public List<CustomerDto> getCategory() {
+    public List<CustomerSimpleDto> getCustomer() {
         return customerRepository.findAll()
                 .stream()
-                .map(CustomerService::toDTO)
+                .map(CustomerService::toSimpleDTO)
                 .toList();
     }
 

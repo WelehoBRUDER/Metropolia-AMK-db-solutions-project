@@ -5,6 +5,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CustomerDto {
     private int id;
     private String firstName;
@@ -12,6 +15,7 @@ public class CustomerDto {
     private String email;
     private String phone;
     private CustomerProfileSimpleDto profile;
+    private List<OrderDto> orders = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -61,4 +65,11 @@ public class CustomerDto {
         this.profile = profile;
     }
 
+    public List<OrderDto> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OrderDto> orders) {
+        this.orders = orders;
+    }
 }

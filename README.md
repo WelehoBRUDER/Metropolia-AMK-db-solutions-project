@@ -59,6 +59,11 @@ The project has been refactored and moved here in a bulk commit, so the commit h
 `CustomerDto` contains the following fields: `id` (int), `firstName` (string), `lastName` (string), `email` (string), `phone` (string), and `profile` (CustomerProfileSimpleDto).  
  This DTO is used when returning customer information.
 
+`CustomerSimpleDto` is a simplified object for bulk retrieval of customer information, containing only the following fields: `id` (int), `firstName` (string), `lastName` (string), `email` (string) and `phone` (string).
+
+`CustomerDto` also includes all orders associated with the customer, represented as a JSON array of OrderDto objects.  
+This is only displayed when retrieving a single customer by ID, and not when retrieving the list of all customers.
+
 - `GET /customer`: Retrieve a list of all customers as CustomerDto objects.
 - `GET /customer/{id}`: Retrieve a specific customer by its ID as a CustomerDto object.
 - `POST /customer/`: Create a new customer. The created customer is returned as a JSON object of CustomerDto.
