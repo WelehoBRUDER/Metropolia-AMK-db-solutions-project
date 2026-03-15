@@ -2,12 +2,15 @@ package fi.metropolia.juhanaha.database_solutions_project.controller;
 
 import fi.metropolia.juhanaha.database_solutions_project.CustomerRepository;
 import fi.metropolia.juhanaha.database_solutions_project.OrderRepository;
+import fi.metropolia.juhanaha.database_solutions_project.dto.OrderDto;
 import fi.metropolia.juhanaha.database_solutions_project.entity.Order;
+import fi.metropolia.juhanaha.database_solutions_project.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/order")
@@ -19,14 +22,15 @@ public class OrderController {
     }
 
     @GetMapping("/")
-    public List<Order> getOrders() {
-        return orderRepository.findAll();
+    public List<OrderDto> getOrders() {
+        return orderRepository.findAll().stream().map(OrderService::toDTO).toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable int id) {
+    public ResponseEntity<OrderDto> getOrderById(@PathVariable int id) {
         return orderRepository.findById(id)
-                .map(product -> ResponseEntity.ok(product))
+                .map(OrderService::toDTO)
+                .map(order -> ResponseEntity.ok(order))
                 .orElse(ResponseEntity.notFound().build());
     }
 

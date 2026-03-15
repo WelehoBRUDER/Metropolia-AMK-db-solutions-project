@@ -1,6 +1,7 @@
-package fi.metropolia.juhanaha.database_solutions_project.entity;
+package fi.metropolia.juhanaha.database_solutions_project.dto;
 
 import fi.metropolia.juhanaha.database_solutions_project.converter.OrderStatusConverter;
+import fi.metropolia.juhanaha.database_solutions_project.entity.OrderItem;
 import fi.metropolia.juhanaha.database_solutions_project.enums.OrderStatus;
 import jakarta.persistence.*;
 
@@ -8,39 +9,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@Table(name="orders")
-public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    // Make JPA connection later
-    @Column(name="customer_id")
-    private int customerId;
-    @Column(name="order_date")
+public class OrderDto {
+    private Integer id;
+    private Integer customerId;
     private Date orderDate;
-    @Column(name = "delivery_date")
     private Date deliveryDate;
-    @Column(name="shipping_address_id")
     private Integer shippingAddressId;
-    @Convert(converter = OrderStatusConverter.class)
     private OrderStatus status;
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> orderItems = new ArrayList<OrderItem>();
+    private List<OrderItemDto> orderItems = new ArrayList<OrderItemDto>();
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getCustomerId() {
+    public Integer getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(int customerId) {
+    public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
     }
 
@@ -76,11 +66,11 @@ public class Order {
         this.status = status;
     }
 
-    public List<OrderItem> getOrderItems() {
+    public List<OrderItemDto> getOrderItems() {
         return orderItems;
     }
 
-    public void setOrderItems(List<OrderItem> orderItems) {
+    public void setOrderItems(List<OrderItemDto> orderItems) {
         this.orderItems = orderItems;
     }
 }
