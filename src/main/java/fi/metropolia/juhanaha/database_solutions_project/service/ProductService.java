@@ -1,6 +1,7 @@
 package fi.metropolia.juhanaha.database_solutions_project.service;
 
 import fi.metropolia.juhanaha.database_solutions_project.dto.ProductDto;
+import fi.metropolia.juhanaha.database_solutions_project.dto.ProductSimpleDto;
 import fi.metropolia.juhanaha.database_solutions_project.entity.Product;
 import fi.metropolia.juhanaha.database_solutions_project.entity.Supplier;
 
@@ -23,6 +24,24 @@ public class ProductService {
         dto.setStockQuantity(product.getStockQuantity());
         dto.setCategory(product.getCategory() != null ? product.getCategory().getId() : null);
         dto.setSuppliers(supplierIds);
+        return dto;
+    }
+
+    public static ProductSimpleDto toSimpleDTO(Product product) {
+        if (product == null) return null;
+
+        List<Integer> supplierIds = product.getSuppliers()
+                .stream()
+                .map(Supplier::getId)
+                .toList();
+
+        ProductSimpleDto dto = new ProductSimpleDto();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setStockQuantity(product.getStockQuantity());
+        dto.setCategory(product.getCategory() != null ? product.getCategory().getId() : null);
         return dto;
     }
 

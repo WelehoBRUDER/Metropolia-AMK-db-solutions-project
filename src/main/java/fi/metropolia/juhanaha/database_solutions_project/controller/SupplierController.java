@@ -1,9 +1,12 @@
 package fi.metropolia.juhanaha.database_solutions_project.controller;
 
 import fi.metropolia.juhanaha.database_solutions_project.SupplierRepository;
+import fi.metropolia.juhanaha.database_solutions_project.dto.SupplierDto;
 import fi.metropolia.juhanaha.database_solutions_project.entity.Supplier;
+import fi.metropolia.juhanaha.database_solutions_project.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import fi.metropolia.juhanaha.database_solutions_project.service.SupplierService;
 
 import java.util.List;
 
@@ -17,13 +20,14 @@ public class SupplierController {
     }
 
     @GetMapping("/")
-    public List<Supplier> getSupplier() {
-        return supplierRepository.findAll();
+    public List<SupplierDto> getSupplier() {
+        return supplierRepository.findAll().stream().map(SupplierService::toDTO).toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Supplier> getSupplier(@PathVariable final int id) {
+    public ResponseEntity<SupplierDto> getSupplier(@PathVariable final int id) {
         return supplierRepository.findById(id)
+                .map(SupplierService::toDTO)
                 .map(supplier -> ResponseEntity.ok(supplier))
                 .orElse(ResponseEntity.notFound().build());
     }
