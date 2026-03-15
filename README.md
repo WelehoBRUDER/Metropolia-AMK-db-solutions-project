@@ -79,10 +79,12 @@ This is only displayed when retrieving a single customer by ID, and not when ret
 
 Items in an order are represented as a JSON array of OrderItemDto objects. Each OrderItemDto contains the following fields: `product` (ProductSimpleDto), `quantity` (int), and `price` (double).
 
+`OrderItemRequest` is a JSON object with the following fields: `productId` (int) and `quantity` (int) 
+
 - `GET /order`: Retrieve a list of all orders as OrderDto objects.
 - `GET /order/{id}`: Retrieve a specific order by its ID as an OrderDto object.
 - `POST /order/`: Create a new order. The created order is returned as a JSON object of OrderDto.
-  - JSON request body: `customerId`: int, `orderItems`: [OrderItemDto], `orderDate`: Date, `deliveryDate`: Date, `shippingAddressId`: int
+  - JSON request body: `customerId`: int, `orderItems`: [`OrderItemRequest`], `shippingAddressId`: int
 - `PUT /order/{id}`: Update the status / state of an order.
   - JSON request body: `status`: string ("CANCELLED", "SHIPPED", "NEW"), `deliveryDate`: Date (optional)
 - `DELETE /order/{id}`: Delete an order by its ID.
