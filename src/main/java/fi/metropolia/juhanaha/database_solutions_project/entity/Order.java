@@ -4,6 +4,7 @@ import fi.metropolia.juhanaha.database_solutions_project.converter.OrderStatusCo
 import fi.metropolia.juhanaha.database_solutions_project.enums.OrderStatus;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,15 +19,15 @@ public class Order {
     @Column(name="customer_id")
     private int customerId;
     @Column(name="order_date")
-    private Date orderDate;
+    private LocalDate orderDate;
     @Column(name = "delivery_date")
-    private Date deliveryDate;
+    private LocalDate deliveryDate;
     @Column(name="shipping_address_id")
     private Integer shippingAddressId;
     @Convert(converter = OrderStatusConverter.class)
     private OrderStatus status;
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> orderItems = new ArrayList<OrderItem>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -44,19 +45,19 @@ public class Order {
         this.customerId = customerId;
     }
 
-    public Date getOrderDate() {
+    public LocalDate getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
     }
 
-    public Date getDeliveryDate() {
+    public LocalDate getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(LocalDate deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 
@@ -82,5 +83,10 @@ public class Order {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public void addItem(OrderItem item) {
+        this.orderItems.add(item);
+        item.setOrder(this);
     }
 }

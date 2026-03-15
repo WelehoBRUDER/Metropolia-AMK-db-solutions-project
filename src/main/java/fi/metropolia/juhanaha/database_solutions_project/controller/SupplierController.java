@@ -32,6 +32,34 @@ public class SupplierController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PostMapping("/")
+    public ResponseEntity<SupplierDto> createSupplier(@RequestBody Supplier supplier) {
+        return ResponseEntity.ok(SupplierService.toDTO(supplierRepository.save(supplier)));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Supplier> updateSupplier(@PathVariable final int id, @RequestBody Supplier supplier) {
+        return supplierRepository.findById(id)
+                .map(existingSupplier -> {
+                    existingSupplier.setName(supplier.getName());
+                    existingSupplier.setContactName(supplier.getContactName());
+                    existingSupplier.setPhone(supplier.getPhone());
+                    supplierRepository.save(existingSupplier);
+                    return ResponseEntity.ok(existingSupplier);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Supplier> deleteSupplier(@PathVariable final int id) {
+        return supplierRepository.findById(id)
+                .map(supplier -> {
+                    supplierRepository.deleteById(id);
+                    return ResponseEntity.ok(supplier);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 //    @GetMapping("/{id}/products")
 //    public List<Product> getProducts(@PathVariable final int id) {
 //        ResponseEntity<Supplier> supplier = getSupplier(id);

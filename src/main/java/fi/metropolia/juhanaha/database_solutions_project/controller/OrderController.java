@@ -2,12 +2,20 @@ package fi.metropolia.juhanaha.database_solutions_project.controller;
 
 import fi.metropolia.juhanaha.database_solutions_project.CustomerRepository;
 import fi.metropolia.juhanaha.database_solutions_project.OrderRepository;
+import fi.metropolia.juhanaha.database_solutions_project.ProductRepository;
 import fi.metropolia.juhanaha.database_solutions_project.dto.OrderDto;
+import fi.metropolia.juhanaha.database_solutions_project.dto.OrderItemRequestDto;
+import fi.metropolia.juhanaha.database_solutions_project.dto.OrderRequestDto;
 import fi.metropolia.juhanaha.database_solutions_project.entity.Order;
+import fi.metropolia.juhanaha.database_solutions_project.entity.OrderItem;
+import fi.metropolia.juhanaha.database_solutions_project.entity.Product;
+import fi.metropolia.juhanaha.database_solutions_project.enums.OrderStatus;
 import fi.metropolia.juhanaha.database_solutions_project.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,9 +24,36 @@ import java.util.stream.Collectors;
 @RequestMapping("/order")
 public class OrderController {
     private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
 
-    public OrderController(OrderRepository orderRepository) {
+    public OrderController(OrderRepository orderRepository, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
+    }
+
+    public Order createOrderFromRequest(OrderRequestDto dto) {
+        Order order = new Order();
+
+        order.setCustomerId(dto.getCustomerId());
+        order.setShippingAddressId(dto.getShippingAddressId());
+
+        order.setOrderDate(LocalDate.now());
+        order.setDeliveryDate(null);
+        order.setStatus(OrderStatus.NEW);
+
+        for (OrderItemRequestDto item : dto.getOrderItems()) {
+
+            Product product = productRepository.findById(item.getProductId()).orElseThrow();
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setProduct(product);
+            orderItem.setQuantity(item.getQuantity());
+            orderItem.setUnitPrice(product.getPrice());
+
+            order.addItem(orderItem);
+        }
+        return orderRepository.save(order);
     }
 
     @GetMapping("/")
@@ -32,6 +67,13 @@ public class OrderController {
                 .map(OrderService::toDTO)
                 .map(order -> ResponseEntity.ok(order))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderRequestDto request) {
+        Order order = createOrderFromRequest(request);
+
+        return ResponseEntity.ok(OrderService.toDTO(order));
     }
 
     @PutMapping("/{id}")
@@ -50,4 +92,16 @@ public class OrderController {
 
         return ResponseEntity.ok(updatedOrder);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Order> deleteOrder(@PathVariable int id) {
+        Optional<Order> existingOrder = orderRepository.findById(id);
+        if (existingOrder.isEmpty()) {
+            return ResponseEntity.notFound().build();
+
+        }
+        orderRepository.delete(existingOrder.get());
+        return ResponseEntity.ok(existingOrder.get());
+    }
+
 }

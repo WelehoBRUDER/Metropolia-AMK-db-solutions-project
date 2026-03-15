@@ -55,10 +55,26 @@ public class ProductController {
                 .toList();
     }
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         productRepository.save(product);
         return ResponseEntity.ok(product);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody Product product) {
+        return productRepository.findById(id)
+                .map(existingProduct -> {
+                    existingProduct.setName(product.getName());
+                    existingProduct.setDescription(product.getDescription());
+                    existingProduct.setPrice(product.getPrice());
+                    existingProduct.setStockQuantity(product.getStockQuantity());
+                    existingProduct.setCategory(product.getCategory());
+                    existingProduct.setSuppliers(product.getSuppliers());
+                    productRepository.save(existingProduct);
+                    return ResponseEntity.ok(existingProduct);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/price-bulk")
@@ -79,5 +95,11 @@ public class ProductController {
             updatedRows = productRepository.updatePriceOfCategory(request.getFactor(), request.getCat());
         }
         return ResponseEntity.ok(updatedRows + " products updated");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable int id) {
+        productRepository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }

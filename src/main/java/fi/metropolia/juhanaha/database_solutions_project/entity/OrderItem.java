@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Table(name="orderitems")
 public class OrderItem {
     @EmbeddedId
-    private OrderItemId id;
+    private OrderItemId id = new OrderItemId();
 
     @ManyToOne
     @MapsId("orderId")

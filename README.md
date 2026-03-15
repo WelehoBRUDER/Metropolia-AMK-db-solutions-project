@@ -20,10 +20,13 @@ The project has been refactored and moved here in a bulk commit, so the commit h
 - `GET /product/category/{id}`: Retrieve list of products by category ID. The products are returned as a JSON array of ProductDto objects.
 - `GET /product/search`: Search for products by supplier and/or maximum price. The products are returned as a JSON array of ProductDto objects.
   - JSON request body: `supplier`: int (optional), `maxPrice`: double (optional)
-- `POST /product/add`: Create a new product. The created product is returned as a JSON object of ProductDto.
+- `POST /product/`: Create a new product. The created product is returned as a JSON object of ProductDto.
+  - JSON request body: `name`: string, `description`: string, `price`: double, `stockQuantity`: int, `suppliers`: [supplierEntity], `category`: categoryEntity
+- `PUT /product/{id}`: Update a product by its ID. The updated product is returned as a JSON object of ProductDto.
   - JSON request body: `name`: string, `description`: string, `price`: double, `stockQuantity`: int, `suppliers`: [supplierEntity], `category`: categoryEntity
 - `PUT /product/price-bulk`: Update prices for all products in a given category at once. The factor is applied as a multiplier (eg 1.1 translates to a 10% increase).
   - JSON request body: `cat`: int, `factor`: double
+- `DELETE /product/{id}`: Delete a product by its ID.
 
 ### Supplier
 
@@ -34,6 +37,11 @@ The project has been refactored and moved here in a bulk commit, so the commit h
 
 - `GET /supplier`: Retrieve a list of all suppliers as SupplierDto objects.
 - `GET /supplier/{id}`: Retrieve a specific supplier by its ID as a SupplierDto object.
+- `POST /supplier/`: Create a new supplier. The created supplier is returned as a JSON object of SupplierDto.
+  - JSON request body: `name`: string, `contactName`: string, `phone`: string, `email`: string
+- `PUT /supplier/{id}`: Update a supplier by its ID. The updated supplier is returned as a JSON object of SupplierDto.
+  - JSON request body: `name`: string, `contactName`: string, `phone`: string, `email`: string
+- `DELETE /supplier/{id}`: Delete a supplier by its ID.
 
 ### Category
 
@@ -49,10 +57,15 @@ The project has been refactored and moved here in a bulk commit, so the commit h
 ### Customer
 
 `CustomerDto` contains the following fields: `id` (int), `firstName` (string), `lastName` (string), `email` (string), `phone` (string), and `profile` (CustomerProfileSimpleDto).  
- This DTO is used when returning customer information, including the orders that belong to the customer.
+ This DTO is used when returning customer information.
 
 - `GET /customer`: Retrieve a list of all customers as CustomerDto objects.
 - `GET /customer/{id}`: Retrieve a specific customer by its ID as a CustomerDto object.
+- `POST /customer/`: Create a new customer. The created customer is returned as a JSON object of CustomerDto.
+  - JSON request body: `firstName`: string, `lastName`: string, `email`: string, `phone`: string,
+- `PUT /customer/{id}`: Update a customer by its ID. The updated customer is returned as a JSON object of CustomerDto.
+  - JSON request body: `firstName`: string, `lastName`: string, `email`: string, `phone`: string
+- `DELETE /customer/{id}`: Delete a customer by its ID.
 
 ### Order
 
@@ -63,5 +76,8 @@ Items in an order are represented as a JSON array of OrderItemDto objects. Each 
 
 - `GET /order`: Retrieve a list of all orders as OrderDto objects.
 - `GET /order/{id}`: Retrieve a specific order by its ID as an OrderDto object.
+- `POST /order/`: Create a new order. The created order is returned as a JSON object of OrderDto.
+  - JSON request body: `customerId`: int, `orderItems`: [OrderItemDto], `orderDate`: Date, `deliveryDate`: Date, `shippingAddressId`: int
 - `PUT /order/{id}`: Update the status / state of an order.
-  - JSON request body: `status`: string ("CANCELLED", "SHIPPED", "NEW")
+  - JSON request body: `status`: string ("CANCELLED", "SHIPPED", "NEW"), `deliveryDate`: Date (optional)
+- `DELETE /order/{id}`: Delete an order by its ID.

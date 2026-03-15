@@ -5,6 +5,7 @@ import fi.metropolia.juhanaha.database_solutions_project.entity.OrderItem;
 import fi.metropolia.juhanaha.database_solutions_project.enums.OrderStatus;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,8 +13,8 @@ import java.util.List;
 public class OrderDto {
     private Integer id;
     private Integer customerId;
-    private Date orderDate;
-    private Date deliveryDate;
+    private LocalDate orderDate;
+    private LocalDate deliveryDate;
     private Integer shippingAddressId;
     private OrderStatus status;
     private List<OrderItemDto> orderItems = new ArrayList<OrderItemDto>();
@@ -34,19 +35,19 @@ public class OrderDto {
         this.customerId = customerId;
     }
 
-    public Date getOrderDate() {
+    public LocalDate getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
     }
 
-    public Date getDeliveryDate() {
+    public LocalDate getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(LocalDate deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 
