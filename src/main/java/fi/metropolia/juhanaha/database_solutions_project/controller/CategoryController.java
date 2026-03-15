@@ -1,9 +1,11 @@
 package fi.metropolia.juhanaha.database_solutions_project.controller;
 
 import fi.metropolia.juhanaha.database_solutions_project.CategoryRepository;
+import fi.metropolia.juhanaha.database_solutions_project.dto.CategoryDto;
 import fi.metropolia.juhanaha.database_solutions_project.entity.Category;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import fi.metropolia.juhanaha.database_solutions_project.service.CategoryService;
 
 import java.util.List;
 
@@ -17,13 +19,14 @@ public class CategoryController {
     }
 
     @GetMapping("/")
-    public List<Category> getCategory() {
-        return categoryRepository.findAll();
+    public List<CategoryDto> getCategory() {
+        return categoryRepository.findAll().stream().map(CategoryService::toDTO).toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategory(@PathVariable final int id) {
+    public ResponseEntity<CategoryDto> getCategory(@PathVariable final int id) {
         return categoryRepository.findById(id)
+                .map(CategoryService::toDTO)
                 .map(category -> ResponseEntity.ok(category))
                 .orElse(ResponseEntity.notFound().build());
     }
