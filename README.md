@@ -86,3 +86,53 @@ Items in an order are represented as a JSON array of OrderItemDto objects. Each 
 - `PUT /order/{id}`: Update the status / state of an order.
   - JSON request body: `status`: string ("CANCELLED", "SHIPPED", "NEW"), `deliveryDate`: Date (optional)
 - `DELETE /order/{id}`: Delete an order by its ID.
+
+## Database changes
+
+The project's database includes various enhancements not present in the base db.  
+These enhancements are not included in the JPA repository but are locally on the database.
+
+### Order logging event
+
+A logging event that is run once per day. It gathers all orders made that day and sums their prices together.  
+The log is saved to the *order_logs* table, alongside the current date. It also shows how many orders were made that day.
+
+```SQL
+INSERT INTO order_logs (log_date, orders_total, total_price)
+	SELECT
+		CURDATE() AS log_date,
+		COUNT(DISTINCT o.id) AS orders_total,
+		COALESCE(SUM(oi.unit_price * oi.quantity), 0) AS total_price
+	FROM orders o
+	LEFT JOIN orderitems oi
+		ON oi.order_id = o.id
+	WHERE o.order_date >= CURDATE() AND o.order_date < CURDATE() + INTERVAL 1 DAY
+```
+
+### Price change logging
+
+A logging trigger that is run whenever a product's price is changed. It saves the product's id and its old price.  
+The log is saved to table *price_changes* alongside the current date.
+
+```SQL
+BEGIN
+    IF OLD.price <> NEW.price THEN
+        INSERT INTO price_changes (productid, prev_price)
+        VALUES (OLD.id, OLD.price);
+    END IF;
+END
+```
+
+### Product category view
+
+Displays a view of each product category. The values included in the view are:  
+* Category name
+* Number of products
+* Average price
+
+```SQL
+SELECT productcategories.name AS 'Category', COUNT(*) AS 'Product count', AVG(price) AS 'Median price'
+FROM productcategories INNER JOIN products
+ON products.category_id = productcategories.id
+GROUP BY productcategories.name 
+```
