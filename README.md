@@ -1,8 +1,16 @@
-# Metropolia-AMK-db-solutions-project
+# Web Store JPA - REST API
+
+This project implements a REST API for a web store using Java Persistence API (JPA) and Spring Boot. The API provides endpoints for managing products, suppliers, categories, customers, and orders.
 
 ## API Endpoints
 
 ### Product
+
+`ProductSimpleDto` is a simplified version of the Product entity, containing only the following fields: `id` (int), `name` (string), `description` (string), `stockQuantity` (int), `price` (double) and `category` (int).  
+ This DTO is used when returning product information in contexts where only basic details are needed, such as in order items.
+
+`ProductDto` is otherwise identical to _ProductSimpleDto_, but also includes a list of supplier IDs (int).
+
 - `GET /product`: Retrieve a list of all products. The products are returned as a JSON array of ProductDto objects.
 - `GET /product/{id}`: Retrieve a specific product by its ID. The product is returned as a JSON object of ProductDto.
 - `GET /product/category/{id}`: Retrieve list of products by category ID. The products are returned as a JSON array of ProductDto objects.
@@ -14,22 +22,42 @@
   - JSON request body: `cat`: int, `factor`: double
 
 ### Supplier
-- `GET /supplier`: Retrieve a list of all suppliers.
-- `GET /supplier/{id}`: Retrieve a specific supplier by its ID.
+
+`SupplierSimpleDto` is a simplified version of the Supplier entity, containing only the following fields: `id` (int), `name` (string), `contactName` (string), `phone` (string) and `email` (string).  
+ This DTO is used when returning supplier information in contexts where only basic details are needed, such as in product information.
+
+`SupplierDto` is otherwise identical to _SupplierSimpleDto_, but also includes a list of products (ProductSimpleDto).
+
+- `GET /supplier`: Retrieve a list of all suppliers as SupplierDto objects.
+- `GET /supplier/{id}`: Retrieve a specific supplier by its ID as a SupplierDto object.
 
 ### Category
-- `GET /category`: Retrieve a list of all categories.
-- `GET /category/{id}`: Retrieve a specific category by its ID.
+
+`CategoryDto` is a simplified version of the Category entity, containing the following fields: `id` (int), `name` (string), `description` (string) and `products` (ProductDto).  
+ This DTO is used when returning category information, including the products that belong to the category.
+
+- `GET /category`: Retrieve a list of all categories as CategoryDto objects.
+- `GET /category/{id}`: Retrieve a specific category by its ID as a CategoryDto object.
 - `POST /category/add`: Create a new category.
   - JSON request body: `name`: string, `description`: string
 - `DELETE /category/{id}`: Delete a category by its ID. This will also delete all products associated with the category.
 
 ### Customer
-- `GET /customer`: Retrieve a list of all customers.
-- `GET /customer/{id}`: Retrieve a specific customer by its ID.
+
+`CustomerDto` contains the following fields: `id` (int), `firstName` (string), `lastName` (string), `email` (string), `phone` (string), and `profile` (CustomerProfileSimpleDto).  
+ This DTO is used when returning customer information, including the orders that belong to the customer.
+
+- `GET /customer`: Retrieve a list of all customers as CustomerDto objects.
+- `GET /customer/{id}`: Retrieve a specific customer by its ID as a CustomerDto object.
 
 ### Order
-- `GET /order`: Retrieve a list of all orders.
-- `GET /order/{id}`: Retrieve a specific order by its ID.
+
+`OrderDto` contains the following fields: `id` (int), `customerId` (Integer), `orderItems` (OrderItemDto), `deliveryDate` (Date), `orderDate` (Date),`shippingAddressId` (int), and `status` (string).  
+ This DTO is used when returning order information.
+
+Items in an order are represented as a JSON array of OrderItemDto objects. Each OrderItemDto contains the following fields: `product` (ProductSimpleDto), `quantity` (int), and `price` (double).
+
+- `GET /order`: Retrieve a list of all orders as OrderDto objects.
+- `GET /order/{id}`: Retrieve a specific order by its ID as an OrderDto object.
 - `PUT /order/{id}`: Update the status / state of an order.
   - JSON request body: `status`: string ("CANCELLED", "SHIPPED", "NEW")
